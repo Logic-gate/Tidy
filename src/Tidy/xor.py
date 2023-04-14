@@ -34,6 +34,8 @@ import tarfile
 import os
 from tqdm import tqdm
 import chardet
+# from numba import jit, cuda
+import numpy as np
 
 
 class Xor():
@@ -79,6 +81,7 @@ class Xor():
                 raise ValueError('Unable to decode file with any encoding')
       return file_data.encode('utf-8')
       # return self.read(doc)
+   
 
    def getKey(self, doc, getHtml, key_out):
       '''Envoke getFile()
@@ -106,7 +109,51 @@ class Xor():
       s = open(path, 'a')
       s.write(doc.decode())
       s.close
+   ######
 
+
+   # @cuda.jit
+   # def encrypt_kernel(self, doc, output, key_out, entropy):
+   #     # Calculate the current thread index
+   #     i = cuda.grid(1)
+
+   #     # Calculate the total number of threads
+   #     n_threads = cuda.gridsize(1)
+
+   #     # Envoke getFile()
+   #     getFile = ...
+
+   #     # Envoke getKey()
+   #     getKey = ...
+
+   #     # Encrypt the data using XOR
+   #     for j in range(i, len(getFile), n_threads):
+   #         xor_in = ...
+
+   #         # Envoke save()
+   #         output[j] = ...
+
+   #         # Envoke save() for the key output
+   #         key_out[j] = ...
+
+   # @jit
+   # def encrypt(self, doc, output, key_out, entropy):
+   #     n_threads = 128 # Set the number of threads per block
+   #     n_blocks = (len(doc) + n_threads - 1) // n_threads # Calculate the number of blocks
+
+   #     # Allocate device memory
+   #     doc_device = cuda.to_device(np.array(doc))
+   #     output_device = cuda.device_array(len(doc), dtype=np.uint8)
+   #     key_out_device = cuda.device_array(len(doc), dtype=np.uint8)
+
+   #     # Launch the CUDA kernel
+   #     self.encrypt_kernel[n_blocks, n_threads](doc_device, output_device, key_out_device, entropy)
+
+   #     # Copy the results back to host memory
+   #     output[:] = output_device.copy_to_host()
+   #     key_out[:] = key_out_device.copy_to_host()
+   # ######
+   # @jit(forceobj=True, looplift=True)
    def encrypt(self, doc, output, key_out, entropy):
       '''Envoke getFile()
          Envoke getKey()
