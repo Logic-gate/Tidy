@@ -36,6 +36,8 @@ from tqdm import tqdm
 import chardet
 # from numba import jit, cuda
 import numpy as np
+import ctypes
+import configparser
 
 
 class Xor():
@@ -50,7 +52,21 @@ class Xor():
    def rand(self, size=[], chars=string.ascii_letters + string.digits + string.hexdigits + string.punctuation + string.whitespace):
       '''Generate a random key based on the message length
       TODO: Provide string option'''
-      return ''.join(random.choice(chars) for x in range(int(size)))
+      #return ''.join(random.choice(chars) for x in range(int(size)))
+
+      #Change this later and add config parsing to the helper module
+      #Should be a function that any module can import
+      # print(os.getcwd())
+      # config = configparser.ConfigParser()
+      # config.read('config.ini')
+      # librand = config.get('lib', 'librand')
+      lib = ctypes.CDLL('/home/mad-dev/Projects/tidy/production/Tidy/src/Tidy/lib/librandom.so')
+      lib.rand_string.argtypes = [ctypes.c_char_p, ctypes.c_size_t, ctypes.c_char_p]
+      lib.rand_string.restype = ctypes.c_char_p
+      result = ctypes.create_string_buffer(int(size)+1)
+      lib.rand_string(result, int(size), chars.encode())
+      #Check if random...IMPORTANT
+      return result.value.decode()
 
    def read(self, data):
       '''Simple read function'''
@@ -95,7 +111,7 @@ class Xor():
       n = len(getFile)
       print('Generate Key for', doc)
       for i in tqdm(getFile):
-            key = self.rand(n) #rand(size)
+         key = self.rand(n)
       self.save(key_out, key)
       return key
 

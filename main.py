@@ -200,6 +200,7 @@ def main() -> None:
 	print('*'*50)
 	n = _tidy.calPrime(516)
 	push = _tidy.push_time_stamp(g, n)
+	print(f'Using {n} for Segment' )
 	#print(push)
 	#print(g)
 	with open('seg_file', 'w+') as f:
