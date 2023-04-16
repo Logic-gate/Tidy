@@ -4,7 +4,17 @@ This branch is used for testing. The supplied code is not intended for productio
 This branch will be under heavy development. 
 
 Basic usage:
- 
+
+`librandom.so` needs to be compiled locally
+
+```
+gcc -shared -fPIC -o librandom.so librand.c
+```
+
+Full path of `librandom.so` needs to be states in `xor.py:63`
+
+This will later be fixed by adding `config.ini`
+
 ```
 positional arguments:
   file_to_encrypt  Path to the file to be encrypted
